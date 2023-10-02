@@ -1,0 +1,17 @@
+.signin {
+    padding: 50px 80px 80px !important;
+    margin-top: 10%;
+}
+
+label {
+    font-size: 14px;
+}
+
+.btn{
+    font-size: 14px !important;
+}
+
+.text-muted {
+    font-size: 12px!important;
+    color: red!important;
+}
