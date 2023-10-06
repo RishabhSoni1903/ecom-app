@@ -19,4 +19,10 @@ export class AuthController {
     async login(@Request() req) {
         return this.usersService.login(req.user)
     }
+
+    @UseGuards(AuthGuard('jwt'))
+    @Get('getProfile')
+    async getUserInfo(@Request() req) {
+        return this.usersService.getUserInfo(req.user);
+    }
 }

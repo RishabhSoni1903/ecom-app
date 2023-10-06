@@ -28,7 +28,7 @@ function LoginForm() {
                 <h5>Login</h5>
             </div>
 
-            <div>
+            <Form>
                 <FloatingLabel controlId="floatingInput" label="Username" className="mb-3 text-sm">
                     <Form.Control type="text" onChange={(e) => setUsername(e.target.value)} placeholder="name@example.com" />
                 </FloatingLabel>
@@ -40,7 +40,7 @@ function LoginForm() {
                 <Button variant="primary" onClick={handleSubmit} type="submit">
                     Submit
                 </Button>
-            </div>
+            </Form>
 
         </div>
     );

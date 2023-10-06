@@ -16,7 +16,7 @@ const Products = () => {
     })
 
     return (
-        <div className='mt-4'>
+        <div style={{ margin: '5%' }}>
             {products.map((item) => {
                 return <Card key={item.id} style={{ width: '18rem' }}>
                     <Card.Body>

@@ -34,6 +34,29 @@ export const loginAsync = createAsyncThunk(
     }
 )
 
+function getUserInfo(str) {
+    const result = axios.get('/auth/getProfile', { 'headers': { 'Authorization': `Bearer ${str}` } })
+        .then((response) => {
+            return response
+        }).then((error) => {
+            return error
+        })
+    return result
+}
+
+export const getUserInfoAsync = createAsyncThunk(
+    'login/getUserInfo',
+    async (str) => {
+        const response = await getUserInfo(str);
+        if (response.status === 200) {
+            // console.log(response);
+            return response.data;
+        } else {
+            alert("Please login to proceed")
+        }
+    }
+)
+
 export const loginSlice = createSlice({
     name: 'login',
     initialState,
@@ -55,6 +78,10 @@ export const loginSlice = createSlice({
             .addCase(loginAsync.fulfilled, (state, action) => {
                 // console.log(action.payload)
                 state.user = action.payload.user
+            })
+            .addCase(getUserInfoAsync.fulfilled, (state, action) => {
+                state.user = action.payload
+                // console.log(action);
             })
     }
 })

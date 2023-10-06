@@ -40,7 +40,7 @@ const Signup = () => {
                 </FloatingLabel>
 
                 <FloatingLabel controlId="floatingSelect" label="Signup as" className="mb-3">
-                    <Form.Select aria-label="Role" onChange={(e) => { setRole(e.target.value) }}>
+                    <Form.Select required aria-label="Role" onChange={(e) => { setRole(e.target.value) }}>
                         <option value="buyer">Role</option>
                         <option value="buyer">Customer</option>
                         <option value="admin">Seller</option>

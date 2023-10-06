@@ -12,7 +12,7 @@ import { selectCart } from '../features/cartSlice';
 function Appbar() {
 
     const cart = useSelector(selectCart)
-    console.log(cart)
+    // console.log(cart)
     const navigate = useNavigate();
     const dispatch = useDispatch()
     const loggedIn = useSelector(selectLogIn)
@@ -35,7 +35,7 @@ function Appbar() {
     }
 
     return (
-        <Navbar expand="lg" className="sticky bg-body-tertiary" bg="dark" data-bs-theme="dark">
+        <Navbar expand="lg" fixed="top" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
             <Container>
                 <Navbar.Brand style={{ cursor: 'pointer' }} onClick={() => navigate("/")}>React-Bootstrap</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />

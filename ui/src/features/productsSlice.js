@@ -25,6 +25,29 @@ export const fetchAllProductAsync = createAsyncThunk(
     }
 )
 
+function addProduct(data) {
+    const AuthStr = sessionStorage.getItem('jwtToken')
+
+    if (AuthStr) {
+        const result = axios.post('/product', data, { 'headers': { 'Authorization': `Bearer ${AuthStr}` } })
+            .then((response) => {
+                return response;
+            }).then((error) => {
+                return error;
+            })
+        return result;
+    }
+}
+
+export const addProductAsync = createAsyncThunk(
+    'products/addProduct',
+    async (data) => {
+        const response = await addProduct(data);
+        console.log(response);
+        return response.data;
+    }
+)
+
 export const productsSlice = createSlice({
     name: 'products',
     initialState,

@@ -7,12 +7,23 @@ import LoginForm from './components/LoginForm';
 import Signup from './pages/Signup';
 import Cart from './pages/Cart';
 import AddProduct from './pages/AddProduct';
-import { useSelector } from 'react-redux';
-import { selectLogIn } from './features/loginSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { getUserInfoAsync, logIn, selectLogIn } from './features/loginSlice';
 import NotLoggedIn from './pages/NotLoggedIn';
 import NotFound from './pages/NotFound';
+import { useEffect } from 'react';
 
 function App() {
+
+  useEffect(() => {
+    const AuthStr = sessionStorage.getItem('jwtToken');
+    if (AuthStr && !isLoggedIn) {
+      dispatch(logIn());
+      dispatch(getUserInfoAsync(AuthStr));
+    }
+  })
+
+  const dispatch = useDispatch()
 
   const isLoggedIn = useSelector(selectLogIn);
 
