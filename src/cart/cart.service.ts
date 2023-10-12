@@ -13,24 +13,27 @@ export class CartService {
         private productService: ProductService,
     ){}
 
-    async addToCart(productId: number, quantity: number, username: string): Promise<any> {
+    async addToCart(itemId: number, quantity: number, username: string): Promise<any> {
         const cartItems = await this.cartRepository.find({relations: ['item', 'user']});
-        const product = await this.productService.findOne(productId);
+        // console.log(cartItems)
+        const product = await this.productService.findOne(itemId);
         const authUser = await this.userRepository.findOne({where: {username}})
 
         //Confirm if product exists
         if(product) {
             //Check if user already has that item in the cart
-            const cart = cartItems.filter((item)=> item.id === productId && item.user.username === username)
+            const cart = cartItems.filter((item)=> { 
+                return item.item.id === itemId && item.user.username === username
+            })
             if(cart.length < 1) {
                 const newItem = this.cartRepository.create({ total: product.price * quantity, quantity })
                 newItem.user = authUser;
                 newItem.item = product;
-                this.cartRepository.save(newItem)
 
                 return this.cartRepository.save(newItem);
             } else {
                 // Update the item quantity
+                console.log('Update cart called')
                 const quantity = cart[0].quantity =+ 1;
                 const total = cart[0].total * quantity;
 

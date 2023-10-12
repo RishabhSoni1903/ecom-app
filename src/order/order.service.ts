@@ -29,11 +29,16 @@ export class OrderService {
         // If user has pending orders, add them to the list of order
         const cart = await cartItems.map(item => item.item)
 
+        console.log('mai yha tu wha', userOrder)
         if(userOrder.length === 0) {
+            console.log('koi hai yja kya gand mrane ko')
             const newOrder = await this.orderRepository.create({subTotal});
+            console.log('new order', newOrder)
             newOrder.items = cart;
             newOrder.user = authUser;
-            return await this.orderRepository.save(newOrder);
+            //const order = await this.orderRepository.save(newOrder);
+            console.log('kya mai yha pahicha')
+            return newOrder
         } else {
             const existingOrder = userOrder.map(item => item)
             await this.orderRepository.update(existingOrder[0].id, { subTotal: existingOrder[0].subTotal + cart[0].price})

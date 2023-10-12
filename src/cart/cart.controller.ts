@@ -10,8 +10,8 @@ export class CartController {
     @UseGuards(JwtAuthGuard)
     @Post()
     async addToCart(@Body() body, @Request() req): Promise<void> {
-        const { productId, quantity } = body;
-        return await this.cartService.addToCart(productId, quantity, req.user.username)
+        const { id, quantity } = body;
+        return await this.cartService.addToCart(id, quantity, req.user.username)
     }
 
     @UseGuards(JwtAuthGuard)
