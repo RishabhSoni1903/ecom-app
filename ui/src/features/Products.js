@@ -42,8 +42,8 @@ const Products = () => {
                         <Card.Text>{item.description}</Card.Text>
                         <Card.Text>Price: {item.price} INR</Card.Text>
                         <Button className='m-1' variant="outline-primary">Buy now</Button>
-                        <Button className='m-1' onClick={(e) => {e.stopPropagation() ;handleAddToCart(item.id)}} variant="outline-primary">Add to Cart</Button>
-                        {isAdmin && <Button className='m-1' onClick={() => {handleDelete(item.id)}} variant="outline-danger">Delete</Button>}
+                        <Button className='m-1' id='addToCartBtn' onClick={() => {handleAddToCart(item.id)}} variant="outline-primary">Add to Cart</Button>
+                        {isAdmin && <Button className='m-1' id='deleteBtn' onClick={() => {handleDelete(item.id)}} variant="outline-danger">Delete</Button>}
                     </Card.Body>
                 </Card>
                 </Col>

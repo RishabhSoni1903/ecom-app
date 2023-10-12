@@ -1,22 +1,15 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { deleteItemInCartAsync, fetchCartAsync, removeItemFromCart, selectCart } from '../features/cartSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button } from 'react-bootstrap'
 
-const Cart = (cartArr) => {
+const Cart = () => {
 
     const dispatch = useDispatch()
     const cart = useSelector(selectCart)
 
-    // useEffect(()=>{
-    //     dispatch(fetchCartAsync())
-    // }, [])
-
     const handleDelete = (id) => {
-        console.log(cart)
         dispatch(deleteItemInCartAsync(id));
-        // dispatch(removeItemFromCart(id))
-        // navigate('/cart')
     }
 
     console.log(cart)

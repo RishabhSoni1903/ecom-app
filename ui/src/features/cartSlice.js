@@ -37,8 +37,11 @@ export const fetchCartAsync = createAsyncThunk(
 function addToCart(body) {
     const AuthStr = sessionStorage.getItem('jwtToken')
     if(AuthStr) {
+        console.log('nilesh nai yha pada')
+        console.log('body', body)
         const result = axios.post('/cart', body, { 'headers': { 'Authorization': `Bearer ${AuthStr}` } })
         .then((response) => {
+            console.log('result', response)
             return response
         }).then((error) => {
             return error
