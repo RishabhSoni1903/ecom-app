@@ -21,7 +21,7 @@ function App() {
     if (AuthStr && !isLoggedIn) {
       dispatch(logIn());
       dispatch(getUserInfoAsync(AuthStr));
-      dispatch(fetchCartAsync());
+      // dispatch(fetchCartAsync());
     }
   })
 
@@ -30,7 +30,7 @@ function App() {
   const isLoggedIn = useSelector(selectLogIn);
 
   const cartArr = useSelector(selectCart)
-  console.log(cartArr)
+  // console.log(cartArr)
 
   return (
     <Router>

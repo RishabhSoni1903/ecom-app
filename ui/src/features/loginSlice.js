@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../axios";
+import { fetchCartAsync } from "./cartSlice";
 
 const initialState = {
     loggedIn: false,
@@ -27,6 +28,7 @@ export const loginAsync = createAsyncThunk(
             // console.log('logged in')
             sessionStorage.setItem("jwtToken", response.data.access_token)
             thunkAPI.dispatch(logIn())
+            thunkAPI.dispatch(fetchCartAsync())
         } else {
             alert("Credentials are wrong")
         }

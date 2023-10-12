@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
-import { deleteItemInCartAsync, fetchCartAsync, selectCart } from '../features/cartSlice'
+import { deleteItemInCartAsync, fetchCartAsync, removeItemFromCart, selectCart } from '../features/cartSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button } from 'react-bootstrap'
-import { useNavigate } from 'react-router-dom'
 
 const Cart = (cartArr) => {
 
@@ -11,12 +10,12 @@ const Cart = (cartArr) => {
 
     // useEffect(()=>{
     //     dispatch(fetchCartAsync())
-    // }, [cart.length])
+    // }, [])
 
     const handleDelete = (id) => {
-        console.log('delete called with id: ', id)
         console.log(cart)
         dispatch(deleteItemInCartAsync(id));
+        // dispatch(removeItemFromCart(id))
         // navigate('/cart')
     }
 
