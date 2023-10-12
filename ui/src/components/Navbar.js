@@ -44,6 +44,7 @@ function Appbar() {
                             {categories.map((item) => { return <NavDropdown.Item key={item} >{item}</NavDropdown.Item> })}
                         </NavDropdown>
                         {loggedIn && <Nav.Link onClick={() => navigate("/cart")}>Cart <Badge style={{color: 'black'}} bg="light" >{cart.length}</Badge> </Nav.Link>}
+                        {loggedIn && <Nav.Link onClick={() => navigate("/orders")}>My Orders</Nav.Link>}
                         {loggedIn && isAdmin && <Nav.Link onClick={() => navigate("/addProduct")}>Add Product</Nav.Link>}
                     </Nav>
                     <Nav className='pullRight'>

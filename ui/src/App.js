@@ -12,7 +12,8 @@ import { getUserInfoAsync, logIn, selectLogIn } from './features/loginSlice';
 import NotLoggedIn from './pages/NotLoggedIn';
 import NotFound from './pages/NotFound';
 import { useEffect } from 'react';
-import { fetchCartAsync, selectCart } from './features/cartSlice';
+import { selectCart } from './features/cartSlice';
+import Orders from './pages/Orders';
 
 function App() {
 
@@ -42,6 +43,7 @@ function App() {
           <Route path='/signup' element={<Signup />}></Route>
           <Route path='/cart' element={isLoggedIn ? <Cart cartArr={cartArr} /> : <NotLoggedIn />}></Route>
           <Route path='/addProduct' element={isLoggedIn ? <AddProduct /> : <NotLoggedIn />}></Route>
+          <Route path='/orders' element={isLoggedIn ? <Orders /> : <NotLoggedIn />}></Route>
           <Route path='*' element={< NotFound />}></Route>
         </Routes>
         <Footer />
