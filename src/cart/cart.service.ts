@@ -43,4 +43,10 @@ export class CartService {
         const userCart = await this.cartRepository.find({relations: ['item', 'user']});
         return (await userCart).filter((item) => item.user.username === username) 
     }
+
+    async remove(id: number, user: Users) {
+        if(user){
+        return await this.cartRepository.delete(id);
+        }
+    }
 }

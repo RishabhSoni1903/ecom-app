@@ -45,8 +45,8 @@ export class AuthService {
         }
     }
 
-    getUserInfo(user: Users) {
-        const payload = { username: user.username, id: user.id, role: user.role }
-        return payload;
+    getUserInfo(jwtToken: string) {
+        const decodedStr = this.jwt.decode(jwtToken)
+        return decodedStr;
     }
 }

@@ -23,6 +23,7 @@ function AddProduct() {
     const handleSubmit = (event) => {
         event.preventDefault();
         dispatch(addProductAsync(formData))
+        handleReset();
         console.log(formData);
     };
 
@@ -36,7 +37,7 @@ function AddProduct() {
     }
 
     return (
-        <div className='container text-start addProduct' style={{ maxWidth: '40%', borderRadius: '10px', border: '3px solid #e2e3e5' }} >
+        <div className='container text-start addProduct' style={{ maxWidth: '50%', borderRadius: '10px', border: '3px solid #e2e3e5' }} >
 
             <div className="heading mb-4">
                 <h5>Add A Product</h5>

@@ -48,6 +48,30 @@ export const addProductAsync = createAsyncThunk(
     }
 )
 
+function deleteProduct(id) {
+    const AuthStr = sessionStorage.getItem('jwtToken')
+    if(AuthStr){
+    const result = axios.delete(`/product:${id}`, { 'headers': { 'Authorization': `Bearer ${AuthStr}` } })
+        .then((response) => {
+            return response;
+        }).then((error) => {
+            return error;
+            })
+        return result;
+    }else{
+        alert("No Authorization")
+    }
+}
+
+const deleteProductAsync = createAsyncThunk(
+    'product/deleteProduct',
+    async (id) => {
+        const response = await deleteProduct(id);
+        // if(response.status === )
+        return response.data
+    }
+)
+
 export const productsSlice = createSlice({
     name: 'products',
     initialState,

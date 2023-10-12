@@ -70,7 +70,8 @@ export const loginSlice = createSlice({
         setuser: (state, user) => {
             console.log('setUser called')
             state.user = user
-        }
+        },
+        
     },
 
     extraReducers: (builder) => {
@@ -78,10 +79,18 @@ export const loginSlice = createSlice({
             .addCase(loginAsync.fulfilled, (state, action) => {
                 // console.log(action.payload)
                 state.user = action.payload.user
+                state.status = 'idle'
+            })
+            .addCase(loginAsync.pending, (state) => {
+                state.status = 'loading'
             })
             .addCase(getUserInfoAsync.fulfilled, (state, action) => {
                 state.user = action.payload
+                state.status = 'idle'
                 // console.log(action);
+            })
+            .addCase(getUserInfoAsync.pending, (state) => {
+                state.status = 'loading'
             })
     }
 })

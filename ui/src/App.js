@@ -12,6 +12,7 @@ import { getUserInfoAsync, logIn, selectLogIn } from './features/loginSlice';
 import NotLoggedIn from './pages/NotLoggedIn';
 import NotFound from './pages/NotFound';
 import { useEffect } from 'react';
+import { fetchCartAsync, selectCart } from './features/cartSlice';
 
 function App() {
 
@@ -20,12 +21,16 @@ function App() {
     if (AuthStr && !isLoggedIn) {
       dispatch(logIn());
       dispatch(getUserInfoAsync(AuthStr));
+      dispatch(fetchCartAsync());
     }
   })
 
   const dispatch = useDispatch()
 
   const isLoggedIn = useSelector(selectLogIn);
+
+  const cartArr = useSelector(selectCart)
+  console.log(cartArr)
 
   return (
     <Router>
@@ -35,7 +40,7 @@ function App() {
           <Route exact path='/' element={<Home />}></Route>
           <Route path='/login' element={<LoginForm />}></Route>
           <Route path='/signup' element={<Signup />}></Route>
-          <Route path='/cart' element={isLoggedIn ? <Cart /> : <NotLoggedIn />}></Route>
+          <Route path='/cart' element={isLoggedIn ? <Cart cartArr={cartArr} /> : <NotLoggedIn />}></Route>
           <Route path='/addProduct' element={isLoggedIn ? <AddProduct /> : <NotLoggedIn />}></Route>
           <Route path='*' element={< NotFound />}></Route>
         </Routes>

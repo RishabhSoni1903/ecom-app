@@ -12,7 +12,7 @@ export class ProductService {
   ) {}
 
   async create(product: Product, user: Users): Promise<Product> {
-    console.log(user)
+    // console.log(user)
     if(user.role == 'admin'){
           return await this.productRepository.save(product);
         } throw new UnauthorizedException()

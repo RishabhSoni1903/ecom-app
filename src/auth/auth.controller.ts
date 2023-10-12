@@ -23,6 +23,7 @@ export class AuthController {
     @UseGuards(AuthGuard('jwt'))
     @Get('getProfile')
     async getUserInfo(@Request() req) {
-        return this.usersService.getUserInfo(req.user);
+        // console.log(req.user)
+        return req.user;
     }
 }

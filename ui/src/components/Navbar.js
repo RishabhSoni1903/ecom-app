@@ -12,7 +12,6 @@ import { selectCart } from '../features/cartSlice';
 function Appbar() {
 
     const cart = useSelector(selectCart)
-    // console.log(cart)
     const navigate = useNavigate();
     const dispatch = useDispatch()
     const loggedIn = useSelector(selectLogIn)
@@ -44,7 +43,7 @@ function Appbar() {
                         <NavDropdown title="Categories" id="basic-nav-dropdown">
                             {categories.map((item) => { return <NavDropdown.Item key={item} >{item}</NavDropdown.Item> })}
                         </NavDropdown>
-                        {loggedIn && <Nav.Link onClick={() => navigate("/cart")}>Cart <Badge bg="light" >{cart.length}</Badge> </Nav.Link>}
+                        {loggedIn && <Nav.Link onClick={() => navigate("/cart")}>Cart <Badge style={{color: 'black'}} bg="light" >{cart.length}</Badge> </Nav.Link>}
                         {loggedIn && isAdmin && <Nav.Link onClick={() => navigate("/addProduct")}>Add Product</Nav.Link>}
                     </Nav>
                     <Nav className='pullRight'>
