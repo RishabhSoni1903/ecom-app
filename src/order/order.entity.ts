@@ -1,12 +1,14 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { Users } from "src/auth/user.entity";
-import { Product } from "src/product/product.entity";
-import { Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity({name: 'order'})
 export class Order {
     @PrimaryGeneratedColumn()
     id: number
+
+    @CreateDateColumn()
+    createdAt: String
 
     @ApiProperty({
         description: 'The total price of order (price*quantity)',
@@ -16,17 +18,18 @@ export class Order {
     subTotal: number
 
     @ApiProperty({
+        description: 'Description of the items in order'
+    })
+    @Column()
+    items: string
+
+    @ApiProperty({
         description: 'Shows the status of order',
         example: 'false'
     })
     @Column({ default: false })
     pending: boolean
 
-    @OneToMany(()=> Product, item => item.id)
-    @JoinColumn()
-    items: Product[]
-
-    @OneToOne(()=> Users, user => user.username)
-    @JoinColumn()
+    @ManyToOne(() => Users, user => user.username)
     user: Users
 }

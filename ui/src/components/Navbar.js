@@ -8,10 +8,12 @@ import { useDispatch, useSelector } from 'react-redux';
 import { logOut, selectLogIn, selectRole } from '../features/loginSlice';
 import { categories } from '../config/categories'
 import { selectCart } from '../features/cartSlice';
+import { selectOrders } from '../features/ordersSlice';
 
 function Appbar() {
 
     const cart = useSelector(selectCart)
+    const orders = useSelector(selectOrders);
     const navigate = useNavigate();
     const dispatch = useDispatch()
     const loggedIn = useSelector(selectLogIn)
@@ -43,8 +45,8 @@ function Appbar() {
                         <NavDropdown title="Categories" id="basic-nav-dropdown">
                             {categories.map((item) => { return <NavDropdown.Item key={item} >{item}</NavDropdown.Item> })}
                         </NavDropdown>
-                        {loggedIn && <Nav.Link onClick={() => navigate("/cart")}>Cart <Badge style={{color: 'black'}} bg="light" >{cart.length}</Badge> </Nav.Link>}
-                        {loggedIn && <Nav.Link onClick={() => navigate("/orders")}>My Orders</Nav.Link>}
+                        {loggedIn && <Nav.Link onClick={() => navigate("/cart")}>Cart {cart.length > 0 && <Badge style={{ color: 'black' }} bg="light" >{cart.length}</Badge>} </Nav.Link>}
+                        {loggedIn && <Nav.Link onClick={() => navigate("/orders")}>My Orders {orders.length > 0 && <Badge style={{ color: 'black' }} bg="light" >{orders.length}</Badge>}</Nav.Link>}
                         {loggedIn && isAdmin && <Nav.Link onClick={() => navigate("/addProduct")}>Add Product</Nav.Link>}
                     </Nav>
                     <Nav className='pullRight'>

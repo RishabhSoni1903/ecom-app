@@ -43,8 +43,8 @@ export class Users {
     @OneToMany(() => Cart, cart => cart.id)
     @JoinColumn()
     cart: Cart[]
-
-    @OneToOne(() => Order, order => order.id)
+    
+    @OneToMany(() => Order, order => order.id)
     @JoinColumn()
-    order: Order
+    order: Order[];
 }

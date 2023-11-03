@@ -13,7 +13,7 @@ export class Cart {
     @Column()
     quantity: number
 
-    @ManyToOne(() => Product, order => order.id)
+    @ManyToOne(() => Product, item => item.id)
     @JoinColumn()
     item: Product
 

@@ -12,38 +12,40 @@ import { getUserInfoAsync, logIn, selectLogIn } from './features/loginSlice';
 import NotLoggedIn from './pages/NotLoggedIn';
 import NotFound from './pages/NotFound';
 import { useEffect } from 'react';
-import { selectCart } from './features/cartSlice';
+import { fetchCartAsync } from './features/cartSlice';
 import Orders from './pages/Orders';
+import Product from './components/Product';
+import { fetchOrdersAsync } from './features/ordersSlice';
 
 function App() {
+
+  const dispatch = useDispatch()
 
   useEffect(() => {
     const AuthStr = sessionStorage.getItem('jwtToken');
     if (AuthStr && !isLoggedIn) {
       dispatch(logIn());
       dispatch(getUserInfoAsync(AuthStr));
-      // dispatch(fetchCartAsync());
+      dispatch(fetchCartAsync());
+      dispatch(fetchOrdersAsync())
     }
   })
 
-  const dispatch = useDispatch()
-
   const isLoggedIn = useSelector(selectLogIn);
-
-  const cartArr = useSelector(selectCart)
-  // console.log(cartArr)
 
   return (
     <Router>
-      <div className="App">
+      <div className="App py-4">
         <Appbar />
         <Routes>
           <Route exact path='/' element={<Home />}></Route>
           <Route path='/login' element={<LoginForm />}></Route>
           <Route path='/signup' element={<Signup />}></Route>
-          <Route path='/cart' element={isLoggedIn ? <Cart cartArr={cartArr} /> : <NotLoggedIn />}></Route>
+          <Route path='/product/:id' element={<Product />}></Route>
+          <Route path='/cart' element={isLoggedIn ? <Cart /> : <NotLoggedIn />}></Route>
           <Route path='/addProduct' element={isLoggedIn ? <AddProduct /> : <NotLoggedIn />}></Route>
           <Route path='/orders' element={isLoggedIn ? <Orders /> : <NotLoggedIn />}></Route>
+          <Route path='/notLoggedIn' element={<NotLoggedIn />}></Route>
           <Route path='*' element={< NotFound />}></Route>
         </Routes>
         <Footer />

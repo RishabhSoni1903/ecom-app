@@ -7,6 +7,7 @@ import { useDispatch } from 'react-redux';
 import { loginAsync } from '../features/loginSlice';
 import { useNavigate } from 'react-router-dom';
 import { fetchCartAsync } from '../features/cartSlice';
+import { fetchOrdersAsync } from '../features/ordersSlice';
 
 function LoginForm() {
 
@@ -20,6 +21,7 @@ function LoginForm() {
     function handleSubmit() {
         dispatch(loginAsync(credentials));
         dispatch(fetchCartAsync());
+        dispatch(fetchOrdersAsync());
         navigate('/')
     }
 

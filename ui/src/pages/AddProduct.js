@@ -7,6 +7,8 @@ import { categories } from '../config/categories'
 import { useDispatch } from 'react-redux';
 import { useState } from 'react';
 import { addProductAsync } from '../features/productsSlice';
+import { CloudinaryConfig } from '../config/cloudinaryConfig';
+import axios from 'axios';
 
 function AddProduct() {
 
@@ -15,20 +17,41 @@ function AddProduct() {
     const [category, setCategory] = useState('');
     const [price, setPrice] = useState();
     const [description, setDesc] = useState('');
+    const [image, setImage] = useState('');
+    const [imageUrl, setImageUrl] = useState('');
 
-    const formData = { name, brand, category, price, description }
+    const formData = { name, brand, category, price, description, imageUrl }
 
     const dispatch = useDispatch();
 
     const handleSubmit = (event) => {
         event.preventDefault();
+        handleImgChange(image)
         dispatch(addProductAsync(formData))
         handleReset();
         console.log(formData);
     };
 
+    const handleImgChange = async (file) => {
+        console.log(file)
+        const formData = new FormData();
+        formData.append('file', file)
+        formData.append('upload_preset', CloudinaryConfig.uploadPreset)
+
+        try {
+            const response = await axios.post(
+                `https://api.cloudinary.com/v1_1/${CloudinaryConfig.cloudName}/image/upload`,
+                formData
+            );
+            console.log(response.data)
+            setImageUrl(response.data.secure_url)
+        } catch (error) {
+            console.log("Error uploading image: ", error)
+        }
+    }
+
     const handleReset = (e) => {
-        e.preventDefault();
+        // e.preventDefault();
         setName('')
         setBrand('')
         setCategory('')
@@ -69,13 +92,20 @@ function AddProduct() {
 
                     <Form.Group as={Col} controlId="formGridCategory">
                         <Form.Label>Category</Form.Label>
-                        <Form.Select value={category} onChange={(e) => setCategory(e.target.value)} required defaultValue="Choose...">
+                        <Form.Select value={category} onChange={(e) => setCategory(e.target.value)} required>
                             <option>Choose...</option>
                             {categories.map((i) => { return <option value={i} key={i}>{i}</option> })}
                         </Form.Select>
                     </Form.Group>
-
                 </Row>
+
+                <Row className='mb-3'>
+                    <Form.Group as={Col} controlId="formGridImage">
+                        <Form.Label>Choose a photo of the product</Form.Label>
+                        <Form.Control onChange={(e) => setImage(e.target.files[0])} required type='file' />
+                    </Form.Group>
+                </Row>
+
                 <Row>
                     <Form.Group className='col-3' as={Col}>
                         <Button variant="outline-primary" type="submit">

@@ -36,16 +36,15 @@ export const fetchCartAsync = createAsyncThunk(
 
 function addToCart(body) {
     const AuthStr = sessionStorage.getItem('jwtToken')
-    if(AuthStr) {
-        console.log('nilesh nai yha pada')
+    if (AuthStr) {
         console.log('body', body)
         const result = axios.post('/cart', body, { 'headers': { 'Authorization': `Bearer ${AuthStr}` } })
-        .then((response) => {
-            console.log('result', response)
-            return response
-        }).then((error) => {
-            return error
-        })
+            .then((response) => {
+                console.log('result', response)
+                return response
+            }).then((error) => {
+                return error
+            })
         return result
     }
 }
@@ -55,9 +54,9 @@ export const addToCartAsync = createAsyncThunk(
     async (body, thunkAPI) => {
         const response = await addToCart(body)
         console.log(response.data)
-        if(response.status===201) {
+        if (response.status === 201) {
             return response.data
-        }else{
+        } else {
             alert("Error adding item to the cart", response.status, response.statusText)
         }
     }
@@ -65,22 +64,22 @@ export const addToCartAsync = createAsyncThunk(
 
 function deleteItemInCart(id) {
     const AuthStr = sessionStorage.getItem('jwtToken')
-    const result = axios.delete(`/cart/${id}`, {'headers': {'Authorization': `Bearer ${AuthStr}`}})
-            .then((response)=>{
-                console.log('Delete api called', response)
-                return response
-            })
-            .then((error)=>{
-                return error;
-            })
-            return result;
+    const result = axios.delete(`/cart/${id}`, { 'headers': { 'Authorization': `Bearer ${AuthStr}` } })
+        .then((response) => {
+            console.log('Delete api called', response)
+            return response
+        })
+        .then((error) => {
+            return error;
+        })
+    return result;
 }
 
 export const deleteItemInCartAsync = createAsyncThunk(
     'cart/deleteItemInCart',
-    async(id, thunkAPI) => {
+    async (id, thunkAPI) => {
         const response = await deleteItemInCart(id);
-        if(response.status === 200) {
+        if (response.status === 200) {
             console.log(response, "Delete API called")
             thunkAPI.dispatch(removeItemFromCart(id))
             return response.data;
@@ -93,41 +92,53 @@ export const cartSlice = createSlice({
     initialState,
     reducers: {
         setCart: () => {
-            // state.cart = newState;
             console.log("setCart called")
         },
-        removeItemFromCart: (state, id)=>{
-            state.cart = state.cart.filter((item)=> item.id !== id);
+        removeItemFromCart: (state, id) => {
+            state.cart = state.cart.filter((item) => item.id !== id);
+        },
+        emptyCart: (state) => {
+            state.cart = [];
         }
     },
 
     extraReducers: (builder) => {
         builder
-        .addCase(fetchCartAsync.pending, (state) => {
-            state.status = 'loading'
-        })
-        .addCase(fetchCartAsync.fulfilled, (state, action) => {
-            // console.log(action.payload)
-            state.status = 'idle'
-            state.cart = action.payload
-        })
-        .addCase(deleteItemInCartAsync.fulfilled, (state, action)=>{
-            state.status = 'idle'
-            const id = action.meta.arg;
-            state.cart = state.cart.filter((item) => item.id !== id)
-            // console.log('deletion successful', action)
-        })
-        .addCase(deleteItemInCartAsync.rejected, ()=>{
-            console.log('Deletion failed')
-        })
-        .addCase(addToCartAsync.fulfilled, (state, action) => {
-            console.log('Adding to cart successful', action.payload)
-            state.cart.push(action.payload)
-        })
+            .addCase(fetchCartAsync.pending, (state) => {
+                state.status = 'loading'
+            })
+            .addCase(fetchCartAsync.fulfilled, (state, action) => {
+                // console.log(action.payload)
+                state.status = 'idle'
+                state.cart = action.payload
+            })
+            .addCase(deleteItemInCartAsync.fulfilled, (state, action) => {
+                state.status = 'idle'
+                const id = action.meta.arg;
+                state.cart = state.cart.filter((item) => item.id !== id)
+                // console.log('deletion successful', action)
+            })
+            .addCase(deleteItemInCartAsync.rejected, () => {
+                console.log('Deletion failed')
+            })
+            .addCase(addToCartAsync.fulfilled, (state, action) => {
+                console.log('Adding to cart successful', action.payload)
+                // state.cart.push(action.payload)
+                const alreadyExistAt = state.cart.findIndex((item) => item.item.id === action.payload.item.id)
+                // console.log(alreadyExistAt);
+                if (alreadyExistAt === -1) {
+                    state.cart.push(action.payload)
+                } else {
+                    // state.cart = state.cart.map((item, index) => {
+                    //     index === alreadyExistAt ? {  } : item
+                    // })
+                    state.cart[alreadyExistAt].quantity += 1
+                }
+            })
     }
 })
 
-export const { setCart, removeItemFromCart } = cartSlice.actions;
+export const { setCart, removeItemFromCart, emptyCart } = cartSlice.actions;
 
 export const selectCart = (state) => state.cart.cart
 

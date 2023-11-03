@@ -3,8 +3,28 @@ import axios from '../axios';
 
 const initialState = {
     products: [],
+    product: {},
     status: 'idle',
 }
+
+function fetchProduct(id) {
+    const result = axios.get(`/product/${id}`)
+        .then((response) => {
+            return response
+        }).then((error) => {
+            return error
+        });
+    return result
+}
+
+export const fetchProductAsync = createAsyncThunk(
+    'products/fetchProduct',
+    async (id) => {
+        const response = await fetchProduct(id)
+        // console.log(response.data)
+        return response.data;
+    }
+)
 
 function fetchAllProduct() {
     const result = axios.get('/product')
@@ -50,15 +70,15 @@ export const addProductAsync = createAsyncThunk(
 
 function deleteProduct(id) {
     const AuthStr = sessionStorage.getItem('jwtToken')
-    if(AuthStr){
-    const result = axios.delete(`/product:${id}`, { 'headers': { 'Authorization': `Bearer ${AuthStr}` } })
-        .then((response) => {
-            return response;
-        }).then((error) => {
-            return error;
+    if (AuthStr) {
+        const result = axios.delete(`/product:${id}`, { 'headers': { 'Authorization': `Bearer ${AuthStr}` } })
+            .then((response) => {
+                return response;
+            }).then((error) => {
+                return error;
             })
         return result;
-    }else{
+    } else {
         alert("No Authorization")
     }
 }
@@ -92,12 +112,19 @@ export const productsSlice = createSlice({
                 }
                 state.status = "idle";
                 // console.log("fetch products fulfilled", action.payload)
-            }
-            )
+            })
+            .addCase(fetchProductAsync.pending, (state) => {
+                state.status = 'pending'
+            })
+            .addCase(fetchProductAsync.fulfilled, (state, action) => {
+                state.product = action.payload;
+                state.status = 'idle';
+            })
     }
 })
 
 export const selectAllProducts = (state) => state.products.products;
+export const selectProduct = (state) => state.products.product;
 
 export const { addAllProduct } = productsSlice.actions;
 

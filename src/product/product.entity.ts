@@ -27,6 +27,13 @@ export class Product extends BaseEntity {
     })
     @Column()
     description: string;
+    
+    @ApiProperty({
+        description: 'Url of an image of the product',
+        example: 'John Doe'
+    })
+    @Column()
+    imageUrl: string;
 
     @ApiProperty({
         description: 'The category of product',

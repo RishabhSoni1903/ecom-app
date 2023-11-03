@@ -25,6 +25,7 @@ export class CartService {
             const cart = cartItems.filter((item)=> { 
                 return item.item.id === itemId && item.user.username === username
             })
+            console.log(cart);
             if(cart.length < 1) {
                 const newItem = this.cartRepository.create({ total: product.price * quantity, quantity })
                 newItem.user = authUser;
@@ -32,12 +33,10 @@ export class CartService {
 
                 return this.cartRepository.save(newItem);
             } else {
-                // Update the item quantity
-                console.log('Update cart called')
-                const quantity = cart[0].quantity =+ 1;
-                const total = cart[0].total * quantity;
-
-                return await this.cartRepository.update(cart[0].id, {quantity, total})
+                const quantity = cart[0].quantity += 1;
+                const total = cart[0].item.price * quantity;
+                await this.cartRepository.update(cart[0].id, {quantity, total})
+                return cart[0];
             }
         } return null;
     }
