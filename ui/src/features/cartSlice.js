@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit"
 import axios from '../axios'
+import { showToast } from "./toastSlice";
 
 const initialState = {
     cart: [],
@@ -26,10 +27,10 @@ export const fetchCartAsync = createAsyncThunk(
     'cart/fetchCart',
     async () => {
         const response = await fetchCart();
-        // console.log(response)
         if (response.status === 200) {
-            // console.log('fetched cart')
             return response.data
+        } else {
+            throw new Error('Failed to fetch cart')
         }
     }
 )
@@ -53,8 +54,9 @@ export const addToCartAsync = createAsyncThunk(
     'cart/addToCart',
     async (body, thunkAPI) => {
         const response = await addToCart(body)
-        console.log(response.data)
+        // console.log(response.data)
         if (response.status === 201) {
+            thunkAPI.dispatch(showToast("Added to cart!"))
             return response.data
         } else {
             alert("Error adding item to the cart", response.status, response.statusText)
@@ -82,6 +84,7 @@ export const deleteItemInCartAsync = createAsyncThunk(
         if (response.status === 200) {
             console.log(response, "Delete API called")
             thunkAPI.dispatch(removeItemFromCart(id))
+            thunkAPI.dispatch(showToast("Removed from cart!"))
             return response.data;
         }
     }
@@ -122,16 +125,10 @@ export const cartSlice = createSlice({
                 console.log('Deletion failed')
             })
             .addCase(addToCartAsync.fulfilled, (state, action) => {
-                console.log('Adding to cart successful', action.payload)
-                // state.cart.push(action.payload)
                 const alreadyExistAt = state.cart.findIndex((item) => item.item.id === action.payload.item.id)
-                // console.log(alreadyExistAt);
                 if (alreadyExistAt === -1) {
                     state.cart.push(action.payload)
                 } else {
-                    // state.cart = state.cart.map((item, index) => {
-                    //     index === alreadyExistAt ? {  } : item
-                    // })
                     state.cart[alreadyExistAt].quantity += 1
                 }
             })

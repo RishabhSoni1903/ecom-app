@@ -1,9 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from '../axios';
+import { showToast } from "./toastSlice";
 
 const initialState = {
     products: [],
     product: {},
+    category: "",
+    productsByCategory: [],
     status: 'idle',
 }
 
@@ -61,10 +64,17 @@ function addProduct(data) {
 
 export const addProductAsync = createAsyncThunk(
     'products/addProduct',
-    async (data) => {
-        const response = await addProduct(data);
-        console.log(response);
-        return response.data;
+    async (data, thunkAPI) => {
+        try {
+            const response = await addProduct(data);
+            console.log(response);
+            thunkAPI.dispatch(showToast("Product added successfully!"))
+            return response.data;
+        } catch (error) {
+            thunkAPI.dispatch(showToast('Product not added! Check the data entered in the fields are valid.'))
+            throw new Error("Product not created")
+        }
+
     }
 )
 
@@ -92,6 +102,29 @@ const deleteProductAsync = createAsyncThunk(
     }
 )
 
+function filterByCategory(category) {
+    const result = axios.get(`/category/${category}`)
+        .then((response) => {
+            return response
+        }).then((error) => {
+            return error
+        });
+    return result
+}
+
+export const filterByCategoryAsync = createAsyncThunk(
+    'product/filterByCategory',
+    async (category, thunkAPI) => {
+        try {
+            const response = await filterByCategory(category);
+            return response.data
+        } catch (error) {
+            thunkAPI.dispatch(showToast("Products of this category doesn't exists!"))
+            throw new Error("Not Found!")
+        }
+    }
+)
+
 export const productsSlice = createSlice({
     name: 'products',
     initialState,
@@ -99,6 +132,9 @@ export const productsSlice = createSlice({
         addAllProduct: () => {
             // console.log("All products added successfully")
         },
+        setCategory: (state, action) => {
+            state.category = action.payload
+        }
     },
 
     extraReducers: (builder) => {
@@ -111,7 +147,6 @@ export const productsSlice = createSlice({
                     state.products = action.payload
                 }
                 state.status = "idle";
-                // console.log("fetch products fulfilled", action.payload)
             })
             .addCase(fetchProductAsync.pending, (state) => {
                 state.status = 'pending'
@@ -120,12 +155,17 @@ export const productsSlice = createSlice({
                 state.product = action.payload;
                 state.status = 'idle';
             })
+            .addCase(filterByCategoryAsync.fulfilled, (state, action) => {
+                console.log(action.payload)
+                state.productsByCategory = action.payload;
+            })
     }
 })
 
 export const selectAllProducts = (state) => state.products.products;
 export const selectProduct = (state) => state.products.product;
+export const selectProductByCategory = (state) => state.products.productsByCategory;
 
-export const { addAllProduct } = productsSlice.actions;
+export const { addAllProduct, setCategory } = productsSlice.actions;
 
 export default productsSlice.reducer

@@ -1,6 +1,6 @@
 export const categories = [
     'Electronics',
     'Clothing',
-    'Skin Care',
+    'Skincare',
     'Groceries'
 ]

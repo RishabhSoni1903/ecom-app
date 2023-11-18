@@ -1,27 +1,21 @@
 import React, { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addAllProduct, fetchAllProductAsync, selectAllProducts } from './productsSlice'
-import { addToCartAsync } from './cartSlice';
+import { addAllProduct, fetchAllProductAsync, selectAllProducts } from '../features/productsSlice'
+import { addToCartAsync } from '../features/cartSlice';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
-import { selectLogIn, selectRole } from './loginSlice';
+import { selectLogIn, selectRole } from '../features/loginSlice';
 import { Col, Row } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 
-const Products = () => {
+const ProductComponent = ({ data }) => {
+
 
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const products = useSelector(selectAllProducts);
     const loggedIn = useSelector(selectLogIn);
-    // console.log(products)
     const role = useSelector(selectRole);
     const isAdmin = role === 'admin' ? true : false;
-
-    useEffect(() => {
-        dispatch(fetchAllProductAsync());
-        dispatch(addAllProduct())
-    })
 
     const handleClick = (id) => {
         // console.log('handle click called', id)
@@ -50,10 +44,10 @@ const Products = () => {
     }
 
     return (
-        <div style={{ margin: '5%', textAlign: 'left' }}>
-            <Row className='d-flex'>
-                {products.map((item) => {
-                    return <Col key={item.id} xs={12} md={6} lg={3} >
+        <div style={{ textAlign: 'left' }}>
+            <Row className='d-flex flex-start'>
+                {data.map((item) => {
+                    return <Col key={item.id} xs={12} md={4} lg={3} >
                         <Card onClick={() => { handleClick(item.id) }} style={{ width: 'min-content', cursor: 'pointer', margin: '10px' }}>
                             <Card.Img variant="top" style={{ height: '288px', width: '294px' }} src={item.imageUrl} />
                             <Card.Body>
@@ -71,4 +65,4 @@ const Products = () => {
     )
 }
 
-export default Products
+export default ProductComponent

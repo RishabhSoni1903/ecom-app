@@ -4,6 +4,7 @@ import productsReducer from '../features/productsSlice';
 import loginReducer from '../features/loginSlice';
 import cartReducer from '../features/cartSlice'
 import ordersReducer from '../features/ordersSlice'
+import toastReducer from '../features/toastSlice'
 import thunk from 'redux-thunk';
 
 export const store = configureStore({
@@ -12,6 +13,7 @@ export const store = configureStore({
         products: productsReducer,
         login: loginReducer,
         cart: cartReducer,
-        orders: ordersReducer
+        orders: ordersReducer,
+        toast: toastReducer
     },
 }, applyMiddleware(thunk))

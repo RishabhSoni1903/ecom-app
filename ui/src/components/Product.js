@@ -13,12 +13,13 @@ function Product() {
     const loggedIn = useSelector(selectLogIn);
 
     const { id } = useParams();
+
     useEffect(() => {
         dispatch(fetchProductAsync(id));
     }, [])
 
     const product = useSelector(selectProduct);
-    // console.log(product);
+    console.log(product.category);
 
     const handleBuy = (e, id) => {
         e.stopPropagation();
@@ -34,6 +35,10 @@ function Product() {
         } else {
             navigate('/notLoggedIn');
         }
+    }
+
+    function capitalizeFirstLetter(str) {
+        return str.charAt(0).toUpperCase() + str.slice(1);
     }
 
     // console.log(id);
@@ -57,15 +62,6 @@ function Product() {
                 </div>
             </div>
         </Card>
-
-        <div>
-            Product with id: {id}<br></br>
-            Brand: {product.brand}<br></br>
-            Name: {product.name}<br></br>
-            Description: {product.description}<br></br>
-            Price: {product.price}
-        </div>
-
     </div>
     )
 }

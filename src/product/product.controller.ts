@@ -2,7 +2,6 @@ import { Controller, Get, Post, Body, Param, Delete, UseGuards, Request, Put } f
 import { ProductService } from './product.service';
 import { Product } from './product.entity';
 import { JwtAuthGuard } from 'src/auth/jwt-auth.guard';
-import { LocalAuthGuard } from 'src/auth/local-auth.guard';
 
 @Controller('product')
 export class ProductController {

@@ -9,6 +9,7 @@ import { logOut, selectLogIn, selectRole } from '../features/loginSlice';
 import { categories } from '../config/categories'
 import { selectCart } from '../features/cartSlice';
 import { selectOrders } from '../features/ordersSlice';
+import { showToast } from '../features/toastSlice';
 
 function Appbar() {
 
@@ -22,8 +23,9 @@ function Appbar() {
     const isAdmin = role === 'admin' ? true : false
 
     function handleLogout() {
-        dispatch(logOut());
         sessionStorage.removeItem('jwtToken');
+        dispatch(logOut());
+        dispatch(showToast("Logged out!"))
         console.log('logout called')
     }
 
@@ -38,13 +40,14 @@ function Appbar() {
     return (
         <Navbar expand="lg" fixed="top" className="bg-body-tertiary" bg="dark" data-bs-theme="dark">
             <Container>
-                <Navbar.Brand style={{ cursor: 'pointer' }} onClick={() => navigate("/")}>React-Bootstrap</Navbar.Brand>
+                <Navbar.Brand style={{ cursor: 'pointer' }} onClick={() => navigate("/")}>E-Shoppe</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         <NavDropdown title="Categories" id="basic-nav-dropdown">
-                            {categories.map((item) => { return <NavDropdown.Item key={item} >{item}</NavDropdown.Item> })}
+                            {categories.map((item) => { return <NavDropdown.Item key={item} onClick={() => navigate(`/categories/${item}`)} >{item}</NavDropdown.Item> })}
                         </NavDropdown>
+                        <Nav.Link onClick={() => navigate("/products")}>Products</Nav.Link>
                         {loggedIn && <Nav.Link onClick={() => navigate("/cart")}>Cart {cart.length > 0 && <Badge style={{ color: 'black' }} bg="light" >{cart.length}</Badge>} </Nav.Link>}
                         {loggedIn && <Nav.Link onClick={() => navigate("/orders")}>My Orders {orders.length > 0 && <Badge style={{ color: 'black' }} bg="light" >{orders.length}</Badge>}</Nav.Link>}
                         {loggedIn && isAdmin && <Nav.Link onClick={() => navigate("/addProduct")}>Add Product</Nav.Link>}

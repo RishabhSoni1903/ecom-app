@@ -1,5 +1,6 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from '../axios'
+import { showToast } from "./toastSlice";
 
 const initialState = {
     orders: [],
@@ -36,30 +37,34 @@ export const fetchOrdersAsync = createAsyncThunk(
 )
 
 function placeOrder() {
-    let AuthStr = sessionStorage.getItem("jwtToken")
-    console.log(AuthStr)
+    const AuthStr = sessionStorage.getItem("jwtToken")
 
     if (AuthStr) {
-
-        const result = axios.post('/order', { 'headers': { 'Authorization': `${AuthStr}` } })
+        const result = axios.post('/order', '', { 'headers': { 'Authorization': `Bearer ${AuthStr}` } })
             .then((response) => {
                 return response
             }).then((error) => {
                 return error
             })
-
         return result;
     }
 }
 
 export const placeOrderAsync = createAsyncThunk(
-    'orders/fetchOrders',
-    async () => {
-        const response = await placeOrder();
-        // console.log(response)
-        if (response.status === 200) {
-            console.log('order placed', response.data)
-            return response.data
+    'orders/placeOrders',
+    async (data, thunkAPI) => {
+        try {
+            const response = await placeOrder();
+            if (response.status === 201) {
+                console.log('Order placed')
+                thunkAPI.dispatch(showToast("Order placed successfully!"))
+                return response.data
+            } else {
+                throw new Error("Failed to place order!")
+            }
+        } catch (error) {
+            thunkAPI.dispatch(showToast("Order not placed. Try again!"))
+            throw error;
         }
     }
 )
@@ -75,11 +80,18 @@ export const ordersSlice = createSlice({
     extraReducers: (builder) => {
         builder
             .addCase(fetchOrdersAsync.fulfilled, (state, action) => {
-                if (action.payload[0].items) {
-                    action.payload[0].items = JSON.parse(action.payload[0].items)
-                    // console.log('items', action.payload[0].items)
-                    state.orders = action.payload
+                if (action.payload.length > 0) {
+                    action.payload.forEach((i) => {
+                        i.items = JSON.parse(i.items)
+                    })
                 }
+                // console.log('Order', action.payload)
+                state.orders = action.payload
+            })
+            .addCase(placeOrderAsync.fulfilled, (state, action) => {
+                action.payload.items = JSON.parse(action.payload.items)
+                console.log('Order', action.payload)
+                state.orders.push(action.payload)
             })
     }
 

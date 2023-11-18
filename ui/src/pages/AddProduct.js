@@ -29,11 +29,11 @@ function AddProduct() {
         handleImgChange(image)
         dispatch(addProductAsync(formData))
         handleReset();
-        console.log(formData);
+        // console.log(formData);
     };
 
     const handleImgChange = async (file) => {
-        console.log(file)
+        // console.log(file)
         const formData = new FormData();
         formData.append('file', file)
         formData.append('upload_preset', CloudinaryConfig.uploadPreset)
@@ -43,7 +43,7 @@ function AddProduct() {
                 `https://api.cloudinary.com/v1_1/${CloudinaryConfig.cloudName}/image/upload`,
                 formData
             );
-            console.log(response.data)
+            // console.log(response.data)
             setImageUrl(response.data.secure_url)
         } catch (error) {
             console.log("Error uploading image: ", error)
@@ -92,7 +92,7 @@ function AddProduct() {
 
                     <Form.Group as={Col} controlId="formGridCategory">
                         <Form.Label>Category</Form.Label>
-                        <Form.Select value={category} onChange={(e) => setCategory(e.target.value)} required>
+                        <Form.Select value={category} onChange={(e) => setCategory(e.target.value.toLowerCase())} required>
                             <option>Choose...</option>
                             {categories.map((i) => { return <option value={i} key={i}>{i}</option> })}
                         </Form.Select>

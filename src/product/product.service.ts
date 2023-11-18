@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { Product } from './product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -13,14 +13,24 @@ export class ProductService {
 
   async create(product: Product, user: Users): Promise<Product> {
     // console.log(user)
-    if(user.role == 'admin'){
-          return await this.productRepository.save(product);
-        } throw new UnauthorizedException()
+    if (user.role === 'admin') {
+      try {
+        return await this.productRepository.save(product);
+      } catch (error) {
+        throw new InternalServerErrorException('Failed to create the product.');
+      }
+    } else {
+      throw new UnauthorizedException('You are not authorized to create a product.');
+    }
   }
 
   async findAll(): Promise<Product[]> {
     return await this.productRepository.find();
   }
+
+  // async findByCategory(category: string): Promise<Product[]> {
+  //   return await this.productRepository.find({where: {category: category}});
+  // }
 
   async findOne(id: number) {
     return await this.productRepository.findOne({where: {id}});

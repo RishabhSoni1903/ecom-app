@@ -8,6 +8,7 @@ import { dataSourceOptions } from 'db/data-source';
 import { AuthModule } from './auth/auth.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
+import { CategoryModule } from './category/category.module';
 
 @Module({
   imports: [ConfigModule.forRoot({isGlobal: true}),
@@ -15,7 +16,8 @@ import { OrderModule } from './order/order.module';
     TypeOrmModule.forRoot(dataSourceOptions),
     AuthModule,
     CartModule,
-    OrderModule],
+    OrderModule,
+    CategoryModule],
   controllers: [AppController],
   providers: [AppService],
 })

@@ -16,12 +16,18 @@ import { fetchCartAsync } from './features/cartSlice';
 import Orders from './pages/Orders';
 import Product from './components/Product';
 import { fetchOrdersAsync } from './features/ordersSlice';
+import Categories from './pages/Categories';
+import ToastComponent from './components/ToastComponent';
+import SearchBar from './components/SearchBar';
+import Products from './pages/Products';
+import { fetchAllProductAsync } from './features/productsSlice';
 
 function App() {
 
   const dispatch = useDispatch()
 
   useEffect(() => {
+    dispatch(fetchAllProductAsync())
     const AuthStr = sessionStorage.getItem('jwtToken');
     if (AuthStr && !isLoggedIn) {
       dispatch(logIn());
@@ -35,13 +41,17 @@ function App() {
 
   return (
     <Router>
-      <div className="App py-4">
+      <div className="App">
         <Appbar />
+        <SearchBar />
+        <ToastComponent />
         <Routes>
           <Route exact path='/' element={<Home />}></Route>
           <Route path='/login' element={<LoginForm />}></Route>
+          <Route path='/products' element={<Products />}></Route>
           <Route path='/signup' element={<Signup />}></Route>
           <Route path='/product/:id' element={<Product />}></Route>
+          <Route path='/categories/:category' element={<Categories />}></Route>
           <Route path='/cart' element={isLoggedIn ? <Cart /> : <NotLoggedIn />}></Route>
           <Route path='/addProduct' element={isLoggedIn ? <AddProduct /> : <NotLoggedIn />}></Route>
           <Route path='/orders' element={isLoggedIn ? <Orders /> : <NotLoggedIn />}></Route>

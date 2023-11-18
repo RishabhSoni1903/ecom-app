@@ -1,6 +1,8 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "../axios";
 import { fetchCartAsync } from "./cartSlice";
+import { fetchOrdersAsync } from "./ordersSlice";
+import { showToast } from "./toastSlice";
 
 const initialState = {
     loggedIn: false,
@@ -12,7 +14,7 @@ function getToken({ username, password }) {
     const result = axios.post('/auth/login', { username: username, password: password })
         .then((response) => {
             return response
-        }).then((error) => {
+        }).catch((error) => {
             return error
         })
     return result;
@@ -21,18 +23,21 @@ function getToken({ username, password }) {
 export const loginAsync = createAsyncThunk(
     'login/getToken',
     async (credentials, thunkAPI) => {
-        const response = await getToken(credentials);
+
+        const response = await getToken(credentials)
         // console.log(response)
 
         if (response.status === 201) {
-            // console.log('logged in')
             sessionStorage.setItem("jwtToken", response.data.access_token)
             thunkAPI.dispatch(logIn())
             thunkAPI.dispatch(fetchCartAsync())
+            thunkAPI.dispatch(fetchOrdersAsync());
+            thunkAPI.dispatch(showToast('Successfully logged in!'))
+            return response.data;
         } else {
-            alert("Credentials are wrong")
+            thunkAPI.dispatch(showToast("Incorrect credentials!"))
+            throw new Error("Incorrect Credentials")
         }
-        return response.data
     }
 )
 
@@ -40,7 +45,7 @@ function getUserInfo(str) {
     const result = axios.get('/auth/getProfile', { 'headers': { 'Authorization': `Bearer ${str}` } })
         .then((response) => {
             return response
-        }).then((error) => {
+        }).catch((error) => {
             return error
         })
     return result
@@ -51,7 +56,6 @@ export const getUserInfoAsync = createAsyncThunk(
     async (str) => {
         const response = await getUserInfo(str);
         if (response.status === 200) {
-            // console.log(response);
             return response.data;
         } else {
             alert("Please login to proceed")
@@ -72,14 +76,13 @@ export const loginSlice = createSlice({
         setuser: (state, user) => {
             console.log('setUser called')
             state.user = user
-        },
-        
+        }
+
     },
 
     extraReducers: (builder) => {
         builder
             .addCase(loginAsync.fulfilled, (state, action) => {
-                // console.log(action.payload)
                 state.user = action.payload.user
                 state.status = 'idle'
             })
