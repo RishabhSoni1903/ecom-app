@@ -21,6 +21,7 @@ import ToastComponent from './components/ToastComponent';
 import SearchBar from './components/SearchBar';
 import Products from './pages/Products';
 import { fetchAllProductAsync } from './features/productsSlice';
+import Search from './pages/Search';
 
 function App() {
 
@@ -49,6 +50,7 @@ function App() {
           <Route exact path='/' element={<Home />}></Route>
           <Route path='/login' element={<LoginForm />}></Route>
           <Route path='/products' element={<Products />}></Route>
+          <Route path='/search' element={<Search />}></Route>
           <Route path='/signup' element={<Signup />}></Route>
           <Route path='/product/:id' element={<Product />}></Route>
           <Route path='/categories/:category' element={<Categories />}></Route>

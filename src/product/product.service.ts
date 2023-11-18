@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { Product } from './product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Like, Repository } from 'typeorm';
 import { Users } from 'src/auth/user.entity';
 
 @Injectable()
@@ -12,7 +12,6 @@ export class ProductService {
   ) {}
 
   async create(product: Product, user: Users): Promise<Product> {
-    // console.log(user)
     if (user.role === 'admin') {
       try {
         return await this.productRepository.save(product);
@@ -28,10 +27,6 @@ export class ProductService {
     return await this.productRepository.find();
   }
 
-  // async findByCategory(category: string): Promise<Product[]> {
-  //   return await this.productRepository.find({where: {category: category}});
-  // }
-
   async findOne(id: number) {
     return await this.productRepository.findOne({where: {id}});
   }
@@ -46,5 +41,14 @@ export class ProductService {
     if(user.role == 'admin') {
       return await this.productRepository.delete(id);
         } throw new UnauthorizedException();
+  }
+
+  async searchProducts(keyword: string): Promise<Product[]> {
+
+    return this.productRepository
+      .createQueryBuilder('product')
+      .where('LOWER(product.product_name) LIKE LOWER(:keyword)', { keyword: `%${keyword}%` })
+      .orWhere('LOWER(product.description) LIKE LOWER(:keyword)', { keyword: `%${keyword}%` })
+      .getMany();
   }
 }

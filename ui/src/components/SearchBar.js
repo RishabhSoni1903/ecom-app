@@ -1,12 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Button, Card, Form, InputGroup } from 'react-bootstrap'
 import "./SearchBar.css"
+import { useDispatch } from 'react-redux'
+import { searchProductAsync } from '../features/productsSlice'
+import { useNavigate } from 'react-router-dom'
 
 const SearchBar = () => {
 
+    const [keyword, setKeyword] = useState("")
+
+    const dispatch = useDispatch()
+    const navigate = useNavigate()
+
     const handleSearch = (e) => {
         e.preventDefault()
+        // console.log(keyword)
+        dispatch(searchProductAsync(keyword))
         console.log('Search called')
+        navigate('/search')
     }
 
     return (
@@ -18,8 +29,7 @@ const SearchBar = () => {
                             id="search-bar"
                             className='border rounded border-secondary'
                             placeholder="Search"
-                            aria-label="Search"
-                            aria-describedby="basic-addon2"
+                            onChange={(e) => setKeyword(e.target.value)}
                         />
                         <Button variant='outline-secondary' type='submit'>
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="bi bi-search" viewBox="0 0 16 16">

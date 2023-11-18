@@ -8,9 +8,7 @@ import ShopFor from '../components/ShopFor'
 
 const LandingPage = () => {
     const products = useSelector(selectAllProducts);
-    console.log(products)
     const data = products?.slice(0, 4);
-    console.log(data)
     return (
         <div>
             <div>

@@ -9,6 +9,7 @@ import { AuthModule } from './auth/auth.module';
 import { CartModule } from './cart/cart.module';
 import { OrderModule } from './order/order.module';
 import { CategoryModule } from './category/category.module';
+import { SearchModule } from './search/search.module';
 
 @Module({
   imports: [ConfigModule.forRoot({isGlobal: true}),
@@ -17,7 +18,8 @@ import { CategoryModule } from './category/category.module';
     AuthModule,
     CartModule,
     OrderModule,
-    CategoryModule],
+    CategoryModule,
+    SearchModule],
   controllers: [AppController],
   providers: [AppService],
 })

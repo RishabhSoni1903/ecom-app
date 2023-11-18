@@ -7,7 +7,6 @@ import ProductComponent from '../components/ProductComponent';
 const Categories = () => {
 
     let { category } = useParams();
-    // console.log(category)
     category = category.toLowerCase();
 
     const dispatch = useDispatch();
@@ -16,7 +15,7 @@ const Categories = () => {
         dispatch(filterByCategoryAsync(category))
         dispatch(setCategory(category))
         console.log('fetching products of category ' + category)
-    }, [])
+    }, [category])
 
     const data = useSelector(selectProductByCategory)
 

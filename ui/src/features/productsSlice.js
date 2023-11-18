@@ -7,6 +7,7 @@ const initialState = {
     product: {},
     category: "",
     productsByCategory: [],
+    searchedProducts: [],
     status: 'idle',
 }
 
@@ -125,6 +126,29 @@ export const filterByCategoryAsync = createAsyncThunk(
     }
 )
 
+function searchProduct(keyword) {
+    const result = axios.get(`/search/${keyword}`)
+        .then((response) => {
+            return response
+        }).then((error) => {
+            return error
+        })
+    return result;
+}
+
+export const searchProductAsync = createAsyncThunk(
+    'product/searchProduct',
+    async (keyword, thunkAPI) => {
+        try {
+            const response = await searchProduct(keyword)
+            return response.data
+        } catch (error) {
+            thunkAPI.dispatch(showToast("Not Found!"))
+            throw new Error("Not Found!")
+        }
+    }
+)
+
 export const productsSlice = createSlice({
     name: 'products',
     initialState,
@@ -159,12 +183,21 @@ export const productsSlice = createSlice({
                 console.log(action.payload)
                 state.productsByCategory = action.payload;
             })
+            .addCase(searchProductAsync.fulfilled, (state, action) => {
+                console.log(action.payload)
+                state.searchedProducts = action.payload
+            })
+            .addCase(searchProductAsync.rejected, (state, action) => {
+                console.log(action.payload)
+            })
+
     }
 })
 
 export const selectAllProducts = (state) => state.products.products;
 export const selectProduct = (state) => state.products.product;
 export const selectProductByCategory = (state) => state.products.productsByCategory;
+export const selectSearchedProducts = (state) => state.products.searchedProducts;
 
 export const { addAllProduct, setCategory } = productsSlice.actions;
 
