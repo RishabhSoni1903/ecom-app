@@ -43,12 +43,18 @@ export class CartService {
 
     async getItemsInCart(username: string): Promise<Cart[]> {
         const userCart = await this.cartRepository.find({relations: ['item', 'user']});
-        return (await userCart).filter((item) => item.user.username === username) 
+        return userCart.filter((item) => item.user.username === username) 
     }
 
     async remove(id: number, user: Users) {
         if(user){
         return await this.cartRepository.delete(id);
         }
+    }
+
+    async setItemIdToNull(id: number): Promise<Cart> {
+        const cartToUpdate = await this.cartRepository.findOne({where: {item: {id: id}}});
+        cartToUpdate.item = null;
+        return await this.cartRepository.save(cartToUpdate)
     }
 }

@@ -11,7 +11,6 @@ import { OrderController } from './order.controller';
 
 @Module({
   imports: [TypeOrmModule.forFeature([Order, Product, Cart, Users])],
-  // controllers: [OrderController],
   providers: [OrderService, CartService, ProductService],
   controllers: [OrderController]
 })

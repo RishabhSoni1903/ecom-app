@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common';
 import { Product } from './product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Like, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Users } from 'src/auth/user.entity';
 
 @Injectable()

@@ -49,11 +49,11 @@ export const fetchAllProductAsync = createAsyncThunk(
     }
 )
 
-function addProduct(data) {
+function addProduct(payload) {
     const AuthStr = sessionStorage.getItem('jwtToken')
 
     if (AuthStr) {
-        const result = axios.post('/product', data, { 'headers': { 'Authorization': `Bearer ${AuthStr}` } })
+        const result = axios.post('/product', payload, { 'headers': { 'Authorization': `Bearer ${AuthStr}` } })
             .then((response) => {
                 return response;
             }).then((error) => {
@@ -65,9 +65,9 @@ function addProduct(data) {
 
 export const addProductAsync = createAsyncThunk(
     'products/addProduct',
-    async (data, thunkAPI) => {
+    async (payload, thunkAPI) => {
         try {
-            const response = await addProduct(data);
+            const response = await addProduct(payload);
             console.log(response);
             thunkAPI.dispatch(showToast("Product added successfully!"))
             return response.data;
@@ -82,7 +82,7 @@ export const addProductAsync = createAsyncThunk(
 function deleteProduct(id) {
     const AuthStr = sessionStorage.getItem('jwtToken')
     if (AuthStr) {
-        const result = axios.delete(`/product:${id}`, { 'headers': { 'Authorization': `Bearer ${AuthStr}` } })
+        const result = axios.delete(`/product/${id}`, { 'headers': { 'Authorization': `Bearer ${AuthStr}` } })
             .then((response) => {
                 return response;
             }).then((error) => {
@@ -94,7 +94,7 @@ function deleteProduct(id) {
     }
 }
 
-const deleteProductAsync = createAsyncThunk(
+export const deleteProductAsync = createAsyncThunk(
     'product/deleteProduct',
     async (id) => {
         const response = await deleteProduct(id);
@@ -149,6 +149,33 @@ export const searchProductAsync = createAsyncThunk(
     }
 )
 
+function buyNow(productId) {
+    const AuthStr = sessionStorage.getItem('jwtToken')
+    console.log("product Id", productId)
+    const result = axios.post('/order/buynow', productId, { 'headers': { 'Authorization': `Bearer ${AuthStr}` } })
+        .then((response) => {
+            return response;
+        }).then((error) => {
+            return error;
+        })
+    return result;
+}
+
+export const buyNowAsync = createAsyncThunk(
+    'product/buyNow',
+    async (productId, thunkAPI) => {
+        try {
+            const response = await buyNow(productId)
+            console.log(response.data)
+            thunkAPI.dispatch(showToast("Product bought"))
+            return response.data
+        } catch (error) {
+            thunkAPI.dispatch(showToast("Cannot place order"))
+            throw new Error("Cannot place order")
+        }
+    }
+)
+
 export const productsSlice = createSlice({
     name: 'products',
     initialState,
@@ -189,6 +216,12 @@ export const productsSlice = createSlice({
             })
             .addCase(searchProductAsync.rejected, (state, action) => {
                 console.log(action.payload)
+            })
+            .addCase(deleteProductAsync.fulfilled, (state, action) => {
+                console.log(action.meta.arg)
+                const elementToRemove = state.products.filter((item) => item.id == action.meta.arg)
+                console.log("Element to be removed", elementToRemove)
+                // state.products = state.products.filter((item) => item !== elementToRemove)
             })
 
     }

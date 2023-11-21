@@ -4,12 +4,14 @@ import { Order } from './order.entity';
 import { Repository } from 'typeorm';
 import { Users } from 'src/auth/user.entity';
 import { CartService } from 'src/cart/cart.service';
+import { Product } from 'src/product/product.entity';
 
 @Injectable()
 export class OrderService {
     constructor(
         @InjectRepository(Order) private orderRepository: Repository<Order>,
         @InjectRepository(Users) private userRepository: Repository<Users>,
+        @InjectRepository(Product) private productRepository: Repository<Product>,
         private cartService: CartService
     ) {}
 
@@ -40,6 +42,26 @@ export class OrderService {
                 message: 'Cart cannot be empty',
                 statusCode: 400,
             });
+        }
+    }
+
+    async buyNow(user: string, productId: number ) {
+        const authUser = await this.userRepository.findOne({where: {username: user}});
+        const product = await this.productRepository.findOne({where: {id: productId}});
+        const productStr = JSON.stringify(product)
+        if(authUser){
+            const newOrder = this.orderRepository.create({
+                items: productStr,
+                subTotal: product.price,
+                user: authUser
+            })
+            console.log("newOrder", newOrder)
+            return this.orderRepository.save(newOrder);
+        }else{
+            throw new BadRequestException({
+                message: 'Order cannot be placed',
+                statusCode: 400,
+            })
         }
     }
 

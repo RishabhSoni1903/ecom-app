@@ -12,9 +12,9 @@ const Products = () => {
     const products = useSelector(selectAllProducts);
 
     return (
-        <>
+        <div>
             <ProductComponent data={products} />
-        </>
+        </div>
     )
 }
 

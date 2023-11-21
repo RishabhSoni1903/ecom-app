@@ -14,7 +14,7 @@ function ToastComponent() {
         <ToastContainer
             className="p-3"
             position='bottom-center'
-            style={{ zIndex: 1, marginBottom: '3%' }}
+            style={{ zIndex: 1, marginBottom: '3%', position: "fixed", bottom: "3%", left: "50%", transform: "translateX(-50%)" }}
         >
             <Toast
                 onClose={() => dispatch(hideToast())}

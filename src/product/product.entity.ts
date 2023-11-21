@@ -30,7 +30,7 @@ export class Product extends BaseEntity {
     
     @ApiProperty({
         description: 'Url of an image of the product',
-        example: 'John Doe'
+        example: 'imageurlexample.com'
     })
     @Column()
     imageUrl: string;

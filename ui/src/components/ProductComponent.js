@@ -1,6 +1,6 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addAllProduct, fetchAllProductAsync, selectAllProducts } from '../features/productsSlice'
+import { buyNowAsync, deleteProductAsync } from '../features/productsSlice'
 import { addToCartAsync } from '../features/cartSlice';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
@@ -18,13 +18,13 @@ const ProductComponent = ({ data }) => {
     const isAdmin = role === 'admin' ? true : false;
 
     const handleClick = (id) => {
-        // console.log('handle click called', id)
-        navigate(`product/${id}`)
+        navigate(`/product/${id}`)
     }
 
     const handleBuy = (e, id) => {
         e.stopPropagation();
         console.log(id)
+        dispatch(buyNowAsync(id))
     }
 
     const handleAddToCart = (e, id) => {
@@ -40,15 +40,16 @@ const ProductComponent = ({ data }) => {
 
     const handleDelete = (e, id) => {
         e.stopPropagation();
+        dispatch(deleteProductAsync(id))
         console.log("Delete called", id)
     }
 
     return (
-        <div style={{ textAlign: 'left' }}>
-            <Row className='d-flex flex-start'>
+        <div className="d-flex justify-content-around py-2 text-start">
+            <Row>
                 {data.map((item) => {
                     return <Col key={item.id} xs={12} md={4} lg={3} >
-                        <Card onClick={() => { handleClick(item.id) }} style={{ width: 'min-content', cursor: 'pointer', margin: '10px' }}>
+                        <Card onClick={() => { handleClick(item.id) }} className='mx-auto' style={{ width: 'min-content', cursor: 'pointer', margin: '10px' }}>
                             <Card.Img variant="top" style={{ height: '288px', width: '294px' }} src={item.imageUrl} />
                             <Card.Body>
                                 <Card.Title style={{ fontSize: '18px' }}>{item.brand} {item.name}</Card.Title>

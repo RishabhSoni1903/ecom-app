@@ -6,18 +6,9 @@ import { useNavigate } from 'react-router-dom';
 
 const Orders = () => {
 
-    const dispatch = useDispatch();
     const navigate = useNavigate()
 
     const orders = useSelector(selectOrders);
-
-    const handleGetOrder = () => {
-        dispatch(fetchOrdersAsync())
-    }
-
-    const handlePlaceOrder = () => {
-        dispatch(placeOrderAsync())
-    }
 
     // const str = "2023-11-02T14:00:40.426Z"
 
@@ -48,7 +39,7 @@ const Orders = () => {
                                     <Card.Body>
                                         <Card.Subtitle className='pb-2'>Items Bought:</Card.Subtitle>
                                         <Row>
-                                            {item.items.map((i) => {
+                                            {Array.isArray(item.items) ? item.items.map((i) => {
                                                 return <Col xs={12} md={4} lg={2} key={i.id} className='p-2'>
                                                     <Card>
                                                         <Card.Body>
@@ -61,7 +52,17 @@ const Orders = () => {
                                                     </Card>
                                                 </Col>
                                             }
-                                            )}
+                                            ) : <Col xs={12} md={4} lg={2} key={item.items.id} className='p-2'> <Card>
+                                                <Card.Body>
+                                                    <Card.Text className='mb-2' style={{ fontSize: '18px', fontWeight: '500' }}>{item.items.brand} {item.items.name}</Card.Text>
+                                                    <div className='d-flex '>
+                                                        <Card.Text className='mb-2' style={{ fontSize: '18px' }} >Price: {item.items.price}</Card.Text>
+                                                        <Card.Text className='mx-3' style={{ fontSize: '18px' }} >Quantity: {item.items.quantity}</Card.Text>
+                                                    </div>
+                                                </Card.Body>
+                                            </Card>
+                                            </Col>
+                                            }
                                         </Row>
                                     </Card.Body>
                                 </div>
