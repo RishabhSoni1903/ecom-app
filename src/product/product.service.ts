@@ -3,12 +3,16 @@ import { Product } from './product.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Users } from 'src/auth/user.entity';
+import { CartService } from 'src/cart/cart.service';
+import { Cart } from 'src/cart/cart.entity';
 
 @Injectable()
 export class ProductService {
 
   constructor(
-    @InjectRepository(Product) private productRepository: Repository<Product>
+    @InjectRepository(Product) private productRepository: Repository<Product>,
+    @InjectRepository(Cart) private cartRepository: Repository<Cart>,
+    // private cartService: CartService
   ) {}
 
   async create(product: Product, user: Users): Promise<Product> {
@@ -38,7 +42,14 @@ export class ProductService {
   }
 
   async remove(id: number, user: Users) {
+    const itemId = id;
     if(user.role == 'admin') {
+      await this.cartRepository
+  .createQueryBuilder()
+  .delete()
+  .from(Cart)
+  .where('itemId = :itemId', { itemId })
+  .execute();
       return await this.productRepository.delete(id);
         } throw new UnauthorizedException();
   }

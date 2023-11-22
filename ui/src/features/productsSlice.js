@@ -221,7 +221,8 @@ export const productsSlice = createSlice({
                 console.log(action.meta.arg)
                 const elementToRemove = state.products.filter((item) => item.id == action.meta.arg)
                 console.log("Element to be removed", elementToRemove)
-                // state.products = state.products.filter((item) => item !== elementToRemove)
+                console.log("action.payload", action.payload)
+                state.products = state.products.filter((item) => item !== elementToRemove)
             })
 
     }

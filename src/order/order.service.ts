@@ -20,14 +20,14 @@ export class OrderService {
         // Find user's cart item
         const cartItems = await this.cartService.getItemsInCart(user);
         console.log('Cart items', cartItems)
+        const newCartItems = cartItems.filter((i) => i.item !== null)
         
         // Get authenticated user
         const authUser = await this.userRepository.findOne({where: {username: user}});
         
-        if(cartItems.length > 0) {
-            const subTotal = cartItems.map(item => item.total).reduce((acc, next) => acc+next);
-            const itemsStr = JSON.stringify(cartItems)
-            console.log('cart', itemsStr)
+        if(newCartItems.length > 0) {
+            const subTotal = newCartItems.map(item => item.total).reduce((acc, next) => acc+next);
+            const itemsStr = JSON.stringify(newCartItems)
                 const newOrder = this.orderRepository.create({
                 items: itemsStr,
                 subTotal: subTotal,

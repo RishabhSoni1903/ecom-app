@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { deleteItemInCartAsync, fetchCartAsync, removeItemFromCart, selectCart, selectSubTotal } from '../features/cartSlice'
 import { useDispatch, useSelector } from 'react-redux'
 import { Button, Card, Col, Row } from 'react-bootstrap'
@@ -32,19 +32,21 @@ const Cart = () => {
                         <Col xs={12} md={12} lg={8} className='p-2'>
                             <Row>
                                 {cart.map((item) => {
-                                    return <Col key={item.id} xs={12} md={6} lg={4} className='p-2'>
-                                        <Card style={{ width: 'min-content', marginTop: '10px' }}>
-                                            <Card.Img variant="top" style={{ height: '288px', width: '294px' }} src={item.item.imageUrl} />
-                                            <Card.Body>
-                                                <Card.Title style={{ fontSize: '20px', marginBottom: '20px' }}>{item.item.brand} {item.item.name}</Card.Title>
-                                                <div className='d-flex justify-content-between'>
-                                                    <Card.Text style={{ fontSize: '20px', fontWeight: '500' }} >&#x20B9; {item.item.price}</Card.Text>
-                                                    <Card.Text style={{ marginBottom: '12px', fontSize: '18px', fontWeight: '500' }}>Quantity: {item.quantity}</Card.Text>
-                                                </div>
-                                                <Button className='m-1' id='removeBtn' onClick={() => handleDelete(item.id)} variant="outline-danger">Remove</Button>
-                                            </Card.Body>
-                                        </Card>
-                                    </Col>
+                                    if (item.item !== null) {
+                                        return <Col key={item.id} xs={12} md={6} lg={4} className='p-2'>
+                                            <Card style={{ width: 'min-content', marginTop: '10px' }}>
+                                                <Card.Img variant="top" style={{ height: '288px', width: '294px' }} src={item.item.imageUrl} />
+                                                <Card.Body>
+                                                    <Card.Title style={{ fontSize: '20px', marginBottom: '20px' }}>{item.item.brand} {item.item.name}</Card.Title>
+                                                    <div className='d-flex justify-content-between'>
+                                                        <Card.Text style={{ fontSize: '20px', fontWeight: '500' }} >&#x20B9; {item.item.price}</Card.Text>
+                                                        <Card.Text style={{ marginBottom: '12px', fontSize: '18px', fontWeight: '500' }}>Quantity: {item.quantity}</Card.Text>
+                                                    </div>
+                                                    <Button className='m-1' id='removeBtn' onClick={() => handleDelete(item.id)} variant="outline-danger">Remove</Button>
+                                                </Card.Body>
+                                            </Card>
+                                        </Col>
+                                    }
                                 })}
                             </Row>
                         </Col>
